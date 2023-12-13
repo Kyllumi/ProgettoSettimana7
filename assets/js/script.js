@@ -56,40 +56,52 @@ function updateData(data, uri, id) {
 // Variabili
 const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTc4M2QzY2MwNTgzNTAwMTg1MjMwZjciLCJpYXQiOjE3MDIzODg2MTUsImV4cCI6MTcwMzU5ODIxNX0.5GPC4nj_PcynstGgoX_xeHTlq2B_v1WBfoEFJ2C6ayU';
 const URI = "https://striveschool-api.herokuapp.com/api/product";
-const id = '6578866a26761400183c32be';
+const id = '65797de126761400183c478f';
 
 
 // Costruttore
 class Product {
-    constructor(name, description, brand, imageUrl, price,) {
+    constructor(name, description, brand, imageUrl, price, moreInfo) {
         this.name = name;
         this.description = description;
         this.brand = brand;
         this.imageUrl = imageUrl;
         this.price = price;
+        this.moreInfo = moreInfo;
     }
 }
 
-// Creazione oggetti
-let p1 = new Product("Smart TV 4K", "TV con risoluzione ultra HD", "Samsung", "assets/img/tv.jpg", 799.99);
-
-let p2 = new Product("Laptop Ultraleggero", "Notebook sottile e leggero", "Dell", "assets/img/laptop.jpg", 1299.99);
-
-let p3 = new Product("Telecamera di Sorveglianza", "Telecamera per la sicurezza domestica", "Ring", "assets/img/telecamera.jpg", 199.99);
-
-let p4 = new Product("Auricolari Wireless", "Auricolari Bluetooth con cancellazione del rumore", "Sony", "assets/img/cuffie.webp", 149.99);
-
-let p5 = new Product("Stampante Multifunzione", "Stampante per ufficio con scanner integrato", "HP", "assets/img/stampante.jpg", 299.99);
-
-
 // Quando il DOM verrà caricato
 document.addEventListener("DOMContentLoaded", async () => {
-    getData(URI);
-    createProductCards();
+    deleteData(URI, id);
+    if (window.location.pathname.includes('index.html')) {
+        getData(URI);
+        createProductCards();
 
-    
+    }
+
+    if (window.location.pathname.includes('backOffice.html')) {
+        document.querySelector('form button.btn-success').addEventListener('click', () => {
+            createObject();
+        })
+    }
+
+
 });
 
+function createObject() {
+    let nome = document.querySelector('#NomeProdotto').value;
+    let marca = document.querySelector('#brand').value;
+    let descrizione = document.querySelector('#description').value;
+    let immagine = document.querySelector('#imageURL').value;
+    let prezzo = +(document.querySelector('#price').value);
+
+
+    let p = new Product(nome, descrizione, marca, immagine, prezzo);
+    console.log(p);
+
+    createData(p, URI);
+}
 
 function createProductCards() {
     let container = document.querySelector('div#containerCard');
@@ -102,15 +114,16 @@ function createProductCards() {
         .then(response => response.json())
         .then(data => data.forEach(element => {
             let card = `    
-            <div class="card m-3" style="max-width: 380px;">
-                <div class="row g-0">
-                    <div class="col-md-4 d-flex justify-content-center align-items-center">
-                        <img src="${element.imageUrl}" class="img-fluid rounded-start h-75" alt="${element.name}">
+            <div class="card m-3" style="max-width: 400px;">
+            <i class="bi bi-pencil-square position-absolute top-0 end-0 p-1 rounded"></i>
+                <div class="row">
+                    <div class="col-md-4 d-flex">
+                        <img src="${element.imageUrl}" class="img-fluid rounded-start align-self-center" alt="${element.name}">
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
+                    <div class="col-md-8 d-flex">
+                        <div class="card-body align-self-center">
                             <h5 class="card-title">${element.brand}</h5>
-                            <p class="card-text">${element.description}</p>
+                            <p class="card-text">${element.description}. ${element.moreInfo}</p>
                             <div class="d-flex justify-content-between align-items-end">
                             <p class="card-text m-0"><small class="text-body-secondary">${element.price}€</small></p>
                             <button class="btn btn-primary">Compra</button>
@@ -124,26 +137,3 @@ function createProductCards() {
         .catch(err => console.log(err))
 
 }
-
-function addNewProductCard() {
-    let nome = document.querySelector('#NomeProdotto').value;
-    let marca = document.querySelector('#brand').value;
-    let descrizione = document.querySelector('#description').value;
-    let immagine = document.querySelector('#imageURL').value;
-    let prezzo = document.querySelector('#price').value;
-
-    let p = new Product(nome, descrizione, marca, immagine, prezzo);
-
-    fetch(URI, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`
-        },
-        body: JSON.stringify(p)
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(err => console.log(err))
-
-} 
