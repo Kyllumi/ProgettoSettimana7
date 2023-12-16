@@ -15,13 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 let product = await response.json();
                 console.log('prodotto:', product);
                 console.log(product.imageUrl);
-                let productImageReference = document.querySelector('#productImage');
+                let img = document.querySelector('#productImage');
                 let productImage = document.createElement('img');
                 productImage.setAttribute('src', product.imageUrl);
                 productImage.classList.add('w-100');
-                productImageReference.appendChild(productImage);
-                let productInfoReference = document.querySelector('#productInfo');
-                productInfoReference.innerHTML = `
+                productImage.style="max-width: 25rem";
+                img.appendChild(productImage);
+                let info = document.querySelector('#productInfo');
+                info.innerHTML = `
                 <h2>${product.brand} - ${product.name}</h2>
                 <p><b>ID Prodotto:</b> ${product._id}</p>
                 <p>
@@ -30,8 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </p>
                 <p><b>Prezzo Prodotto:</b> $${product.price}</p>
                 <p>
-                <b>URL Immagine:</b> <br> 
-                ${product.imageUrl}</p>
+                    <b>URL Immagine:</b> <br> 
+                    ${product.imageUrl}
+                </p>
                 `
             }
             else {
