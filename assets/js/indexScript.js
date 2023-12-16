@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let cards = document.createElement('div');
             cards.classList.add('col-sm-4', 'd-flex', 'justify-content-center', 'align-items-center');
             cards.innerHTML = `
-            <div class="card shadow" style="width: 20rem; height: 25rem">
+            <div class="card mb-3 shadow" style="width: 20rem; height: 25rem">
                 <img src="${product.imageUrl}" class="img-fluid object-fit-contain h-50" alt="${product.name}" >
                 <div class="card-body bg-light d-flex flex-column justify-content-between">
                     <div class="card-title">
